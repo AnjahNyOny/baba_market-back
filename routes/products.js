@@ -4,6 +4,7 @@ const router = express.Router();
 const db = require('../db');
 const multer = require('multer');
 const path = require('path');
+const auth = require('../middleware/auth');
 
 // --- CONFIGURATION DE L'UPLOAD (MULTER) ---
 // On définit où et comment stocker les fichiers
@@ -39,7 +40,7 @@ router.get('/', async (req, res) => {
 
 // 2. POST : Créer un produit AVEC une image
 // 'upload.single("image")' signifie qu'on attend un fichier dans le champ nommé "image"
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/', auth, upload.single('image'), async (req, res) => {
     try {
         // Multer a traité l'image, on a accès à req.file
         // Express a traité le texte, on a accès à req.body
@@ -54,7 +55,7 @@ router.post('/', upload.single('image'), async (req, res) => {
             INSERT INTO products (name, description, price, stock_quantity, category_id, image_url) 
             VALUES (?, ?, ?, ?, ?, ?)
         `;
-        
+
         const [result] = await db.query(sql, [name, description, price, stock_quantity, category_id, image_url]);
 
         res.status(201).json({ message: "Produit créé !", productId: result.insertId });

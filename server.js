@@ -11,6 +11,8 @@ const PORT = process.env.PORT || 3000;
 
 const categoriesRoutes = require('./routes/categories');
 const productRoutes = require('./routes/products');
+const authRoutes = require('./routes/auth');
+
 
 // Middleware
 app.use(cors()); // Autorise le frontend à nous parler
@@ -22,6 +24,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoriesRoutes);
+app.use('/api/auth', authRoutes);
 
 // Démarrage du serveur
 app.listen(PORT, () => {
